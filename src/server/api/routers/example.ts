@@ -1,12 +1,15 @@
 import { z } from "zod";
-import { createTRPCRouter, publicProcedure } from "~/server/api/trpc";
+import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { EchoRequest, type EchoResponse } from "~/server/proto/example";
+import { getMetadata } from "~/server/api/grpc";
 
 export const exampleAPI = createTRPCRouter({
-    echo: publicProcedure.input(z.object({ message: z.string() })).query(async ({ input, ctx: { clients } }) => {
+    echo: protectedProcedure.input(z.object({ message: z.string() })).query(async ({ input, ctx: { clients, session } }) => {
         const req = EchoRequest.fromPartial(input)
+        const metadata = getMetadata({ token: session?.user.grpcToken })
+
         return new Promise<EchoResponse>((resolve, reject) => {
-            clients.exampleClient.echo(req, (err, res) => {
+            clients.exampleClient.echo(req, metadata, (err, res) => {
                 if (err) {
                     reject(err)
                 } else {
