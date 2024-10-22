@@ -1,6 +1,6 @@
 import * as grpc from '@grpc/grpc-js'
 import { env } from '~/env'
-import { ExampleClient } from '../proto/example'
+import { CourseServiceClient } from '../proto/course';
 
 /* Helpers */
 export const getMetadata = ({ token }: { token?: string }) => {
@@ -20,8 +20,8 @@ const config: grpc.ClientOptions = {
 }
 
 const credentials = grpc.credentials.createInsecure()
-const exampleClient = new ExampleClient(env.BACKEND_URL, credentials, config);
+const courseClient = new CourseServiceClient(env.BACKEND_URL, credentials, config);
 
 export const clients = {
-    exampleClient
+    courseClient
 }

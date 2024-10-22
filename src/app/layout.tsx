@@ -4,6 +4,7 @@ import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 
 import { TRPCReactProvider } from "~/trpc/react";
+import { ThemeProvider } from "./_components/ui/theme-provider";
 
 export const metadata: Metadata = {
     title: "AlgoHub",
@@ -17,7 +18,15 @@ export default function RootLayout({
     return (
         <html lang="en" className={`${GeistSans.variable}`}>
             <body>
-                <TRPCReactProvider>{children}</TRPCReactProvider>
+                <ThemeProvider
+                    attribute="class"
+                    defaultTheme="dark"
+                    disableTransitionOnChange={true}
+                >
+                    <TRPCReactProvider>
+                        {children}
+                    </TRPCReactProvider>
+                </ThemeProvider>
             </body>
         </html>
     );
